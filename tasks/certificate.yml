@@ -1,8 +1,8 @@
 - name: Check required certificate variables
   assert:
     that:
-      - update_svc_name is defined
-      - zend_svc_name is defined
+      - secnode_update_svc_name is defined
+      - secnode_zend_svc_name is defined
     msg: Required variable missing.
 
 # Dependencies
@@ -59,20 +59,20 @@
 # Services to update certificate
 - name: Create update service file
   copy:
-    dest: /lib/systemd/system/{{ update_svc_name }}.service
+    dest: /lib/systemd/system/{{ secnode_update_svc_name }}.service
     owner: root
     content: |
       [Unit]
-      Description={{ update_svc_name }}.service
+      Description={{ secnode_update_svc_name }}.service
 
       [Service]
       Type=oneshot
-      ExecStart=/usr/bin/certbot -q renew --deploy-hook "systemctl restart {{ zend_svc_name }}"
+      ExecStart=/usr/bin/certbot -q renew --deploy-hook "systemctl restart {{ secnode_zend_svc_name }}"
       PrivateTmp=true
   register: update_svc_file
 - name: Create update timer file
   copy:
-    dest: /lib/systemd/system/{{ update_svc_name }}.timer
+    dest: /lib/systemd/system/{{ secnode_update_svc_name }}.timer
     owner: root
     content: |
       [Unit]
@@ -80,7 +80,7 @@
 
       [Timer]
       OnCalendar=*-*-* 06:00:00
-      Unit={{ update_svc_name }}.service
+      Unit={{ secnode_update_svc_name }}.service
       Persistent=true
 
       [Install]
@@ -99,6 +99,6 @@
     state: stopped
 - name: Start and enable update timer
   service:
-    name: "{{ update_svc_name }}.timer"
+    name: "{{ secnode_update_svc_name }}.timer"
     enabled: yes
     state: started
