@@ -4,7 +4,6 @@
       - secnode_alert_email is defined
       - secnode_region is defined
       - secnode_stake_taddr is defined
-      - secnode_tracker_bare_dir is defined
       - secnode_tracker_dir is defined
       - secnode_tracker_svc_name is defined
       - secnode_user_name is defined
@@ -49,22 +48,15 @@
     dest: "{{ secnode_tracker_dir }}"
     state: directory
     owner: "{{ secnode_user_name }}"
-- name: Check tracker source for update
-  become: yes
-  become_user: "{{ secnode_user_name }}"
-  git:
-    repo: https://github.com/ZencashOfficial/secnodetracker.git
-    dest: "{{ secnode_tracker_bare_dir }}"
-    bare: yes
-  register: secnode_tracker_code
 - name: Secure Node Tracker Install
   block:
-    - name: Update tracker source
+    - name: Git tracker source
       become: yes
       become_user: "{{ secnode_user_name }}"
       git:
         repo: https://github.com/ZencashOfficial/secnodetracker.git
         dest: "{{ secnode_tracker_dir }}"
+        version: "1f5970620f5d7b9e20e140fa7203b3ce328f979c"
         force: yes
     - name: npm install
       npm:
@@ -84,7 +76,6 @@
         timeout: 5
   become: yes
   become_user: "{{ secnode_user_name }}"
-  when: secnode_tracker_code.changed
 
 # Tracker service
 - name: Create tracker service file
