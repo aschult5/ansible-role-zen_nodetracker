@@ -1,0 +1,104 @@
+- name: Check required certificate variables
+  assert:
+    that:
+      - update_svc_name is defined
+      - zend_svc_name is defined
+    msg: Required variable missing.
+
+# Dependencies
+- name: Install apt-transport-https
+  apt: name=apt-transport-https
+- name: Setup certbot repository
+  apt_repository:
+    repo: ppa:certbot/certbot
+
+- name: Install certificate dependencies
+  apt:
+    name: "{{ item }}"
+  loop:
+    - ca-certificates
+    - certbot
+    - ssl-cert
+
+# Certificate
+- name: Generate Certificate
+  command: "certbot certonly -n --agree-tos --register-unsafely-without-email --standalone -d {{ inventory_hostname }}"
+  args:
+    creates: "/etc/letsencrypt/live/{{ inventory_hostname }}/chain.pem"
+
+- name: Set letsencrypt directory attributes
+  file:
+    path: "/etc/letsencrypt"
+    state: directory
+    owner: root
+    group: ssl-cert
+    mode: 0750
+    recurse: yes
+
+- name: Create /usr/local/share/ca-certificates directory
+  file:
+    state: directory
+    path: /usr/local/share/ca-certificates
+- name: Copy certificate
+  copy:
+    remote_src: yes
+    src: "/etc/letsencrypt/live/{{ inventory_hostname }}/chain.pem"
+    dest: /usr/local/share/ca-certificates/chain.crt
+  register: cert_copy
+
+# Update certificates on CA change
+- block:
+    - name: update-ca-certificates
+      shell: "update-ca-certificates"
+      register: update_ca_certificates
+    - name: update_ca_certificates stdout
+      debug:
+        msg: "{{ update_ca_certificates.stdout }}"
+  when: cert_copy.changed
+
+# Services to update certificate
+- name: Create update service file
+  copy:
+    dest: /lib/systemd/system/{{ update_svc_name }}.service
+    owner: root
+    content: |
+      [Unit]
+      Description={{ update_svc_name }}.service
+
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/bin/certbot -q renew --deploy-hook "systemctl restart {{ zend_svc_name }}"
+      PrivateTmp=true
+  register: update_svc_file
+- name: Create update timer file
+  copy:
+    dest: /lib/systemd/system/{{ update_svc_name }}.timer
+    owner: root
+    content: |
+      [Unit]
+      Description=Run update unit daily @ 06:00:00 (UTC)
+
+      [Timer]
+      OnCalendar=*-*-* 06:00:00
+      Unit={{ update_svc_name }}.service
+      Persistent=true
+
+      [Install]
+      WantedBy=timers.target
+  register: update_timer_file
+
+- name: Systemd daemon-reload
+  systemd:
+    daemon_reload: true
+  when: update_svc_file.changed or update_timer_file.changed
+
+- name: Disable certbot timer
+  service:
+    name: certbot.timer
+    enabled: no
+    state: stopped
+- name: Start and enable update timer
+  service:
+    name: "{{ update_svc_name }}.timer"
+    enabled: yes
+    state: started

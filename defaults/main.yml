@@ -1,0 +1,8 @@
+---
+secnode_user_name: "zenops"
+secnode_user_home: "/home/{{ secnode_user_name }}"
+secnode_tracker_bare_dir: "{{ secnode_user_home }}/secnodetracker_bare/"
+secnode_tracker_dir: "{{ secnode_user_home }}/secnodetracker/"
+
+zennode_user_name: "{{secnode_user_name}}"
+zennode_user_home: "{{secnode_user_home}}"

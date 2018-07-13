@@ -1,0 +1,11 @@
+---
+# tasks file for secnode
+- import_tasks: swap.yml
+- import_tasks: certificate.yml
+- import_tasks: tracker.yml
+
+- name: Wait for zend to start up
+  wait_for: timeout=60
+
+# Check eligibility of server
+- import_tasks: fitness.yml

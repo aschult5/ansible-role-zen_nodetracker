@@ -1,0 +1,123 @@
+- name: Check required tracker variables
+  assert:
+    that:
+      - alert_email is defined
+      - region is defined
+      - stake_taddr is defined
+      - tracker_bare_dir is defined
+      - tracker_dir is defined
+      - tracker_svc_name is defined
+      - user_name is defined
+      - zend_svc_name is defined
+    msg: Required variable missing.
+
+- name: Stop tracker service before making changes
+  service:
+    name: "{{ tracker_svc_name }}.service"
+    state: stopped
+  ignore_errors: yes
+
+# expect module dependencies
+- name: Install python3-pip
+  apt: name=python3-pip
+- name: Install python3-virtualenv
+  apt: name=python3-virtualenv
+- name: Install pexpect
+  pip: name=pexpect
+
+# tracker dependencies
+- name: Install build-essential
+  apt: name=build-essential
+- name: Install software-properties-common
+  apt: name=software-properties-common
+- name: Install apt-transport-https
+  apt: name=apt-transport-https
+- name: Install git
+  apt: name=git
+- name: Install npm
+  apt: name=npm
+- name: Install n
+  npm:
+    name: n
+    global: yes
+- name: n latest
+  command: n latest
+
+# Install tracker from source
+- name: tracker source directory
+  file:
+    dest: "{{ tracker_dir }}"
+    state: directory
+    owner: "{{ user_name }}"
+- name: Check tracker source for update
+  become: yes
+  become_user: "{{ user_name }}"
+  git:
+    repo: https://github.com/ZencashOfficial/secnodetracker.git
+    dest: "{{ tracker_bare_dir }}"
+    bare: yes
+  register: tracker_code
+- name: Secure Node Tracker Install
+  block:
+    - name: Update tracker source
+      become: yes
+      become_user: "{{ user_name }}"
+      git:
+        repo: https://github.com/ZencashOfficial/secnodetracker.git
+        dest: "{{ tracker_dir }}"
+        force: yes
+    - name: npm install
+      npm:
+        path: "{{ tracker_dir }}"
+        state: latest
+    - name: node setup
+      expect:
+        chdir: "{{ tracker_dir }}"
+        command: node setup.js
+        responses:
+          (?i)transparent: "{{ stake_taddr }}"
+          (?i)email: "{{ alert_email }}"
+          FQDN: "{{ inventory_hostname }}"
+          IP: "4"
+          (?i)region: "{{ region }}"
+        echo: yes
+        timeout: 5
+  become: yes
+  become_user: "{{ user_name }}"
+  when: tracker_code.changed
+
+# Tracker service
+- name: Create tracker service file
+  copy:
+    dest: "/lib/systemd/system/{{ tracker_svc_name }}.service"
+    owner: root
+    content: |
+      [Unit]
+      Description=ZenCash node daemon installed on {{ tracker_dir }}
+      Requires={{ zend_svc_name }}.service
+      After={{ zend_svc_name }}.service
+
+      [Service]
+      User={{ user_name }}
+      Type=simple
+      WorkingDirectory={{ tracker_dir }}
+      ExecStart=/usr/local/bin/node {{ tracker_dir }}/app.js
+      Restart=always
+      RestartSec=10
+
+      [Install]
+      WantedBy=multi-user.target
+  register: tracker_svc_file
+
+- name: Systemd daemon-reload
+  systemd:
+    daemon_reload: true
+  when: tracker_svc_file.changed
+
+# Activate tracker
+- name: Start and enable tracker service
+  service:
+    name: "{{ tracker_svc_name }}.service"
+    enabled: yes
+    state: started
+  register: tracker_svc_start
