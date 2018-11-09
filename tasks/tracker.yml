@@ -74,6 +74,27 @@
           (?i)region: "{{ secnode_region }}"
         echo: yes
         timeout: 5
+    - name: stakeaddr cleanup
+      copy:
+        dest: "{{ secnode_tracker_dir }}/config/stakeaddr"
+        content: "{{ secnode_stake_taddr }}"
+    - name: email cleanup
+      copy:
+        dest: "{{ secnode_tracker_dir }}/config/email"
+        content: "{{ secnode_alert_email }}"
+    - name: fqdn cleanup
+      copy:
+        dest: "{{ secnode_tracker_dir }}/config/fqdn"
+        content: "{{ inventory_hostname }}"
+    - name: ip cleanup
+      copy:
+        dest: "{{ secnode_tracker_dir }}/config/ipv"
+        content: "4"
+    - name: region cleanup
+      copy:
+        dest: "{{ secnode_tracker_dir }}/config/region"
+        content: "{{ secnode_region }}"
+
   become: yes
   become_user: "{{ secnode_user_name }}"
 
