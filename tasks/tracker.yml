@@ -1,6 +1,7 @@
 - name: Check required tracker variables
   assert:
     that:
+      - ansible_default_ipv4 is defined
       - secnode_alert_email is defined
       - secnode_region is defined
       - secnode_stake_taddr is defined
@@ -39,8 +40,10 @@
   npm:
     name: n
     global: yes
-- name: n latest
-  command: n latest
+- name: npm cache clean
+  command: npm cache clean -f
+- name: n 10.12.0
+  command: n 10.12.0
 
 # Install tracker from source
 - name: tracker source directory
@@ -54,46 +57,35 @@
       become: yes
       become_user: "{{ secnode_user_name }}"
       git:
-        repo: https://github.com/ZencashOfficial/secnodetracker.git
+        repo: https://github.com/ZencashOfficial/nodetracker.git
         dest: "{{ secnode_tracker_dir }}"
-        version: "1f5970620f5d7b9e20e140fa7203b3ce328f979c"
+        version: "v0.3.1-beta"
         force: yes
     - name: npm install
       npm:
         path: "{{ secnode_tracker_dir }}"
         state: latest
+
+    # setup.js writes the prompts twice if they have an existing value. It uses
+    # escape characters to erase the first write, but the expect module detects them
+    - name: delete nodetracker config
+      file:
+        path: "{{ secnode_tracker_dir }}/config/config.json"
+        state: absent
     - name: node setup
       expect:
         chdir: "{{ secnode_tracker_dir }}"
         command: node setup.js
         responses:
-          (?i)transparent: "{{ secnode_stake_taddr }}"
-          (?i)email: "{{ secnode_alert_email }}"
-          FQDN: "{{ inventory_hostname }}"
-          IP: "4"
-          (?i)region: "{{ secnode_region }}"
+          Enter the node type: "secure"
+          Staking transparent address: "{{ secnode_stake_taddr }}"
+          Alert email address: "{{ secnode_alert_email }}"
+          Full hostname: "{{ inventory_hostname }}"
+          IP address version used for connection: "4"
+          Region: "{{ secnode_region }}"
+          A category may be used to uniquely identify a set of nodes: "nodeler"
         echo: yes
         timeout: 5
-    - name: stakeaddr cleanup
-      copy:
-        dest: "{{ secnode_tracker_dir }}/config/stakeaddr"
-        content: "{{ secnode_stake_taddr }}"
-    - name: email cleanup
-      copy:
-        dest: "{{ secnode_tracker_dir }}/config/email"
-        content: "{{ secnode_alert_email }}"
-    - name: fqdn cleanup
-      copy:
-        dest: "{{ secnode_tracker_dir }}/config/fqdn"
-        content: "{{ inventory_hostname }}"
-    - name: ip cleanup
-      copy:
-        dest: "{{ secnode_tracker_dir }}/config/ipv"
-        content: "4"
-    - name: region cleanup
-      copy:
-        dest: "{{ secnode_tracker_dir }}/config/region"
-        content: "{{ secnode_region }}"
 
   become: yes
   become_user: "{{ secnode_user_name }}"
