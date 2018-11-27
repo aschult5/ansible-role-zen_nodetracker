@@ -68,10 +68,6 @@
 
     # setup.js writes the prompts twice if they have an existing value. It uses
     # escape characters to erase the first write, but the expect module detects them
-    - name: delete nodetracker config
-      file:
-        path: "{{ secnode_tracker_dir }}/config/config.json"
-        state: absent
     - name: node setup
       expect:
         chdir: "{{ secnode_tracker_dir }}"
@@ -86,6 +82,47 @@
           A category may be used to uniquely identify a set of nodes: "nodeler"
         echo: yes
         timeout: 5
+    - name: Fixup nodeid
+      lineinfile:
+        regexp: '"nodeid": null,?'
+        state: absent
+        path: "{{ secnode_tracker_dir }}/config/config.json"
+    - name: Fixup nodetype
+      lineinfile:
+        line: '"nodetype": "secure"\1'
+        regexp: '"nodetype": ".*"(,)?'
+        state: present
+        path: "{{ secnode_tracker_dir }}/config/config.json"
+    - name: Fixup stakeaddr
+      lineinfile:
+        line: '"stakeaddr": "{{ secnode_stake_taddr }}"\1'
+        regexp: '"stakeaddr": ".*"(,)?'
+        path: "{{ secnode_tracker_dir }}/config/config.json"
+    - name: Fixup email
+      lineinfile:
+        line: '"email": "{{ secnode_alert_email }}"\1'
+        regexp: '"email": ".*"(,)?'
+        path: "{{ secnode_tracker_dir }}/config/config.json"
+    - name: Fixup fqdn
+      lineinfile:
+        line: '"fqdn": "{{ inventory_hostname }}"\1'
+        regexp: '"fqdn": ".*"(,)?'
+        path: "{{ secnode_tracker_dir }}/config/config.json"
+    - name: Fixup ipv
+      lineinfile:
+        line: '"ipv": "4"\1'
+        regexp: '"ipv": ".*"(,)?'
+        path: "{{ secnode_tracker_dir }}/config/config.json"
+    - name: Fixup region
+      lineinfile:
+        line: '"region": "na"\1'
+        regexp: '"region": ".*"(,)?'
+        path: "{{ secnode_tracker_dir }}/config/config.json"
+    - name: Fixup category
+      lineinfile:
+        line: '"category": "nodeler"\1'
+        regexp: '"category": ".*"(,)?'
+        path: "{{ secnode_tracker_dir }}/config/config.json"
 
   become: yes
   become_user: "{{ secnode_user_name }}"
