@@ -91,37 +91,44 @@
       lineinfile:
         line: '"nodetype": "secure"\1'
         regexp: '"nodetype": ".*"(,)?'
+        backrefs: yes
         state: present
         path: "{{ secnode_tracker_dir }}/config/config.json"
     - name: Fixup stakeaddr
       lineinfile:
         line: '"stakeaddr": "{{ secnode_stake_taddr }}"\1'
         regexp: '"stakeaddr": ".*"(,)?'
+        backrefs: yes
         path: "{{ secnode_tracker_dir }}/config/config.json"
     - name: Fixup email
       lineinfile:
         line: '"email": "{{ secnode_alert_email }}"\1'
         regexp: '"email": ".*"(,)?'
+        backrefs: yes
         path: "{{ secnode_tracker_dir }}/config/config.json"
     - name: Fixup fqdn
       lineinfile:
         line: '"fqdn": "{{ inventory_hostname }}"\1'
         regexp: '"fqdn": ".*"(,)?'
+        backrefs: yes
         path: "{{ secnode_tracker_dir }}/config/config.json"
     - name: Fixup ipv
       lineinfile:
         line: '"ipv": "4"\1'
         regexp: '"ipv": ".*"(,)?'
+        backrefs: yes
         path: "{{ secnode_tracker_dir }}/config/config.json"
     - name: Fixup region
       lineinfile:
         line: '"region": "na"\1'
         regexp: '"region": ".*"(,)?'
+        backrefs: yes
         path: "{{ secnode_tracker_dir }}/config/config.json"
     - name: Fixup category
       lineinfile:
         line: '"category": "nodeler"\1'
         regexp: '"category": ".*"(,)?'
+        backrefs: yes
         path: "{{ secnode_tracker_dir }}/config/config.json"
 
   become: yes
