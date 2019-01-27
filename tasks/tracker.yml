@@ -1,7 +1,6 @@
 - name: Check required tracker variables
   assert:
     that:
-      - ansible_default_ipv4 is defined
       - secnode_alert_email is defined
       - secnode_region is defined
       - secnode_stake_taddr is defined
