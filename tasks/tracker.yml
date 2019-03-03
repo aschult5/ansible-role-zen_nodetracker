@@ -58,7 +58,7 @@
       git:
         repo: https://github.com/ZencashOfficial/nodetracker.git
         dest: "{{ secnode_tracker_dir }}"
-        version: "v0.3.1-beta"
+        version: "v0.4.0"
         force: yes
     - name: npm install
       npm:
