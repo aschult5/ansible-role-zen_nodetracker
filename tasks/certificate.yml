@@ -2,7 +2,7 @@
   assert:
     that:
       - secnode_update_svc_name is defined
-      - secnode_zend_svc_name is defined
+      - zennode_zend_svc_name is defined
     msg: Required variable missing.
 
 # Dependencies
@@ -81,7 +81,7 @@
 
       [Service]
       Type=oneshot
-      ExecStart=/usr/bin/certbot -q renew --deploy-hook "systemctl restart {{ secnode_zend_svc_name }}"
+      ExecStart=/usr/bin/certbot -q renew --deploy-hook "systemctl restart {{ zennode_zend_svc_name }}"
       PrivateTmp=true
   register: update_svc_file
 - name: Create update timer file

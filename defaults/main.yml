@@ -1,11 +1,5 @@
 ---
-secnode_user_name: "zenops"
-secnode_user_home: "/home/{{ secnode_user_name }}"
-secnode_tracker_dir: "{{ secnode_user_home }}/nodetracker/"
+secnode_tracker_dir: "{{ zennode_user_home }}/nodetracker/"
 secnode_tracker_svc_name: "zentracker"
 secnode_update_svc_name: "zenupdate"
-secnode_zend_svc_name: "zend"
-
-zennode_user_name: "{{secnode_user_name}}"
-zennode_user_home: "{{secnode_user_home}}"
-zennode_zend_svc_name: "{{ secnode_zend_svc_name }}"
+secnode_alert_email: thenodeler@gmail.com

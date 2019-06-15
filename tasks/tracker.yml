@@ -6,8 +6,8 @@
       - secnode_stake_taddr is defined
       - secnode_tracker_dir is defined
       - secnode_tracker_svc_name is defined
-      - secnode_user_name is defined
-      - secnode_zend_svc_name is defined
+      - zennode_user_name is defined
+      - zennode_zend_svc_name is defined
     msg: Required variable missing.
 
 - name: Stop tracker service before making changes
@@ -49,12 +49,12 @@
   file:
     dest: "{{ secnode_tracker_dir }}"
     state: directory
-    owner: "{{ secnode_user_name }}"
+    owner: "{{ zennode_user_name }}"
 - name: Secure Node Tracker Install
   block:
     - name: Git tracker source
       become: yes
-      become_user: "{{ secnode_user_name }}"
+      become_user: "{{ zennode_user_name }}"
       git:
         repo: https://github.com/ZencashOfficial/nodetracker.git
         dest: "{{ secnode_tracker_dir }}"
@@ -131,7 +131,7 @@
         path: "{{ secnode_tracker_dir }}/config/config.json"
 
   become: yes
-  become_user: "{{ secnode_user_name }}"
+  become_user: "{{ zennode_user_name }}"
 
 # Tracker service
 - name: Create tracker service file
@@ -141,11 +141,11 @@
     content: |
       [Unit]
       Description=ZenCash node daemon installed on {{ secnode_tracker_dir }}
-      Requires={{ secnode_zend_svc_name }}.service
-      After={{ secnode_zend_svc_name }}.service
+      Requires={{ zennode_zend_svc_name }}.service
+      After={{ zennode_zend_svc_name }}.service
 
       [Service]
-      User={{ secnode_user_name }}
+      User={{ zennode_user_name }}
       Type=simple
       WorkingDirectory={{ secnode_tracker_dir }}
       ExecStart=/usr/local/bin/node {{ secnode_tracker_dir }}/app.js
