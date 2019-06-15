@@ -46,6 +46,20 @@
     dest: /usr/local/share/ca-certificates/chain.crt
   register: cert_copy
 
+# Register certificate in zen configuration
+- name: tlscertpath token in zen_conf
+  lineinfile:
+    regexp: '^tlscertpath='
+    line: "tlscertpath=/etc/letsencrypt/live/{{ inventory_hostname }}/cert.pem"
+    state: present
+    path: "{{ zennode_zen_conf }}"
+- name: tlskeypath token in zen_conf
+  lineinfile:
+    regexp: '^tlskeypath='
+    line: "tlskeypath=/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem"
+    state: present
+    path: "{{ zennode_zen_conf }}"
+
 # Update certificates on CA change
 - block:
     - name: update-ca-certificates
