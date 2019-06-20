@@ -1,6 +1,6 @@
 ---
 # tasks file for secnode
 - import_tasks: wallet.yml
-  when: zennode_skip_wallet == false
+  when: secnode_skip_wallet == false
 - import_tasks: certificate.yml
 - import_tasks: tracker.yml
