@@ -65,70 +65,19 @@
         path: "{{ secnode_tracker_dir }}"
         state: latest
 
-    # setup.js writes the prompts twice if they have an existing value. It uses
-    # escape characters to erase the first write, but the expect module detects them
-    - name: node setup
-      expect:
-        chdir: "{{ secnode_tracker_dir }}"
-        command: node setup.js
-        responses:
-          Enter the node type: "secure"
-          Staking transparent address: "{{ secnode_stake_taddr }}"
-          Alert email address: "{{ secnode_alert_email }}"
-          Full hostname: "{{ inventory_hostname }}"
-          IP address version used for connection: "4"
-          Region: "{{ secnode_region }}"
-          A category may be used to uniquely identify a set of nodes: "nodeler"
-        echo: yes
-        timeout: 5
-    - name: Fixup nodeid
-      lineinfile:
-        regexp: '"nodeid": null,?'
-        state: absent
-        path: "{{ secnode_tracker_dir }}/config/config.json"
-    - name: Fixup nodetype
-      lineinfile:
-        line: '"nodetype": "secure"\1'
-        regexp: '"nodetype": ".*"(,)?'
-        backrefs: yes
-        state: present
-        path: "{{ secnode_tracker_dir }}/config/config.json"
-    - name: Fixup stakeaddr
-      lineinfile:
-        line: '"stakeaddr": "{{ secnode_stake_taddr }}"\1'
-        regexp: '"stakeaddr": ".*"(,)?'
-        backrefs: yes
-        path: "{{ secnode_tracker_dir }}/config/config.json"
-    - name: Fixup email
-      lineinfile:
-        line: '"email": "{{ secnode_alert_email }}"\1'
-        regexp: '"email": ".*"(,)?'
-        backrefs: yes
-        path: "{{ secnode_tracker_dir }}/config/config.json"
-    - name: Fixup fqdn
-      lineinfile:
-        line: '"fqdn": "{{ inventory_hostname }}"\1'
-        regexp: '"fqdn": ".*"(,)?'
-        backrefs: yes
-        path: "{{ secnode_tracker_dir }}/config/config.json"
-    - name: Fixup ipv
-      lineinfile:
-        line: '"ipv": "4"\1'
-        regexp: '"ipv": ".*"(,)?'
-        backrefs: yes
-        path: "{{ secnode_tracker_dir }}/config/config.json"
-    - name: Fixup region
-      lineinfile:
-        line: '"region": "na"\1'
-        regexp: '"region": ".*"(,)?'
-        backrefs: yes
-        path: "{{ secnode_tracker_dir }}/config/config.json"
-    - name: Fixup category
-      lineinfile:
-        line: '"category": "nodeler"\1'
-        regexp: '"category": ".*"(,)?'
-        backrefs: yes
-        path: "{{ secnode_tracker_dir }}/config/config.json"
+    - name: Nodetracker config parent directory
+      file:
+        path: "{{ secnode_tracker_dir }}/config"
+        state: directory
+        owner: "{{ zennode_user_name }}"
+        mode: 0755
+
+    - name: Nodetracker config
+      template:
+        src: config.j2
+        dest: "{{ secnode_tracker_dir }}/config/config.json"
+        owner: "{{ zennode_user_name }}"
+        mode: 0664
 
   become: yes
   become_user: "{{ zennode_user_name }}"
