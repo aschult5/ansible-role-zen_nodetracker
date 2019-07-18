@@ -72,10 +72,30 @@
         owner: "{{ zennode_user_name }}"
         mode: 0755
 
+    - set_fact:
+        tracker_config_path: "{{ secnode_tracker_dir }}/config/config.json"
+
+    - name: Check if tracker config exists
+      stat:
+        path: "{{ tracker_config_path }}"
+      register: stat_result
+
+    - name: Extract existing tracker nodeid
+      block:
+        - name: Read existing tracker config
+          slurp:
+            src: "{{ tracker_config_path }}"
+          register: existing_tracker_config
+
+        - name: Convert tracker config content to dict
+          set_fact:
+            secnode_tracker_config: "{{ existing_tracker_config['content'] | b64decode | from_json }}"
+      when: stat_result.stat.exists
+
     - name: Nodetracker config
       template:
         src: config.j2
-        dest: "{{ secnode_tracker_dir }}/config/config.json"
+        dest: "{{ tracker_config_path }}"
         owner: "{{ zennode_user_name }}"
         mode: 0664
 
