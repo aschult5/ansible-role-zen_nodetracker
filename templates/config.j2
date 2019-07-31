@@ -1,5 +1,28 @@
 {
- "active": "secure"
+ "active": "{{ secnode_type }}"
+ ,"super": {
+  "nodetype": "super"
+  {% if secnode_tracker_config is defined and 'super' in secnode_tracker_config and 'nodeid' in secnode_tracker_config.super %}
+  ,"nodeid": "{{ secnode_tracker_config.super.nodeid }}"
+  {% endif %}
+  ,"servers": [
+   "xns1.eu"
+   ,"xns2.eu"
+   ,"xns3.eu"
+   ,"xns4.eu"
+   ,"xns1.na"
+   ,"xns2.na"
+   ,"xns3.na"
+   ,"xns4.na"
+  ]
+  ,"stakeaddr": "{{ secnode_stake_taddr }}"
+  ,"email": "{{ secnode_alert_email }}"
+  ,"fqdn": "{{ inventory_hostname }}"
+  ,"ipv": "4"
+  ,"region": "eu"
+  ,"home": "xns1.eu"
+  ,"category": "nodeler"
+ }
  ,"secure": {
   "nodetype": "secure"
   ,"servers": [
