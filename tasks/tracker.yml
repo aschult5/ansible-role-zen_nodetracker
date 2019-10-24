@@ -4,6 +4,7 @@
       - secnode_alert_email is defined
       - secnode_region is defined
       - secnode_stake_taddr is defined
+      - secnode_category is defined
       - secnode_tracker_dir is defined
       - secnode_tracker_svc_name is defined
       - zennode_user_name is defined

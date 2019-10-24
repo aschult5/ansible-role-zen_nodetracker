@@ -21,7 +21,7 @@
   ,"ipv": "4"
   ,"region": "eu"
   ,"home": "xns1.eu"
-  ,"category": "nodeler"
+  ,"category": "{{ secnode_category }}"
  }
  ,"secure": {
   "nodetype": "secure"
@@ -43,7 +43,7 @@
   ,"ipv": "4"
   ,"region": "eu"
   ,"home": "ts2.eu"
-  ,"category": "nodeler"
+  ,"category": "{{ secnode_category }}"
   {% if secnode_tracker_config is defined and 'secure' in secnode_tracker_config and 'nodeid' in secnode_tracker_config.secure %}
   ,"nodeid": "{{ secnode_tracker_config.secure.nodeid }}"
   {% endif %}
