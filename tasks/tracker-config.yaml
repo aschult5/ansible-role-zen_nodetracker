@@ -1,3 +1,4 @@
+---
 - name: Check required tracker variables
   assert:
     that:
@@ -73,7 +74,7 @@
         path: "{{ tracker_config_path }}"
       register: stat_result
 
-    - name: Extract existing tracker nodeid
+    - name: Extract Existing NodeTracker Config
       block:
         - name: Read existing tracker config
           slurp:
@@ -85,7 +86,7 @@
             secnode_tracker_config: "{{ existing_tracker_config['content'] | b64decode | from_json }}"
       when: stat_result.stat.exists
 
-    - name: Nodetracker config
+    - name: NodeTracker Config Template
       template:
         src: config.j2
         dest: "{{ tracker_config_path }}"
@@ -94,38 +95,3 @@
 
   become: yes
   become_user: "{{ zennode_user_name }}"
-
-# Tracker service
-- name: Create tracker service file
-  copy:
-    dest: "/lib/systemd/system/{{ secnode_tracker_svc_name }}.service"
-    owner: root
-    content: |
-      [Unit]
-      Description=ZenCash node daemon installed on {{ secnode_tracker_dir }}
-      Requires={{ zennode_zend_svc_name }}.service
-      After={{ zennode_zend_svc_name }}.service
-
-      [Service]
-      User={{ zennode_user_name }}
-      Type=simple
-      WorkingDirectory={{ secnode_tracker_dir }}
-      ExecStart=/usr/local/bin/node {{ secnode_tracker_dir }}/app.js
-      Restart=always
-      RestartSec=10
-
-      [Install]
-      WantedBy=multi-user.target
-  register: secnode_tracker_svc_file
-
-- name: Systemd daemon-reload
-  systemd:
-    daemon_reload: true
-  when: secnode_tracker_svc_file.changed
-
-# Activate tracker
-- name: Start and enable tracker service
-  service:
-    name: "{{ secnode_tracker_svc_name }}.service"
-    enabled: yes
-    state: started
