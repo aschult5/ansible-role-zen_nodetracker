@@ -6,17 +6,15 @@
     owner: root
     content: |
       [Unit]
-      Description=ZenCash node daemon installed on {{ secnode_tracker_dir }}
+      Description=ZenCash nodetracker
       Requires={{ zennode_zend_svc_name }}.service
       After={{ zennode_zend_svc_name }}.service
 
       [Service]
-      User={{ zennode_user_name }}
-      Type=simple
-      WorkingDirectory={{ secnode_tracker_dir }}
-      ExecStart=/usr/local/bin/node {{ secnode_tracker_dir }}/app.js
-      Restart=always
-      RestartSec=10
+      Type=oneshot
+      RemainAfterExit=yes
+      ExecStart=/usr/bin/docker start {{ secnode_tracker_svc_name }}
+      ExecStop=/usr/bin/docker stop {{ secnode_tracker_svc_name }}
 
       [Install]
       WantedBy=multi-user.target

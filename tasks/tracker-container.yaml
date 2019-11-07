@@ -1,0 +1,23 @@
+---
+- name: Check required tracker variables
+  assert:
+    that:
+      - secnode_tracker_svc_name is defined
+      - tracker_config_path is defined
+      - zennode_zen_dir is defined
+    msg: Required variable missing.
+
+- name: Install Tracker Container
+  docker_container:
+    name: "{{ secnode_tracker_svc_name }}"
+    image: "aschultz5/zen-nodetracker:{{ secnode_tracker_ver|default('latest') }}"
+    state: present
+    restart_policy: unless-stopped
+    log_driver: journald
+    env:
+      ZENCONF: /mnt/zen/zen.conf
+    volumes:
+      - "{{ secnode_tracker_dir }}/config:/home/node/app/config"
+      - "{{ zennode_zen_dir }}:/mnt/zen:ro"
+    networks:
+      - name: "{{ container_net_name }}"

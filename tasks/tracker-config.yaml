@@ -12,53 +12,13 @@
       - zennode_zend_svc_name is defined
     msg: Required variable missing.
 
-- name: Stop tracker service before making changes
-  service:
-    name: "{{ secnode_tracker_svc_name }}.service"
-    state: stopped
-  ignore_errors: yes
-
-# tracker dependencies
-- name: Install build-essential
-  apt: name=build-essential
-- name: Install software-properties-common
-  apt: name=software-properties-common
-- name: Install apt-transport-https
-  apt: name=apt-transport-https
-- name: Install git
-  apt: name=git
-- name: Install npm
-  apt: name=npm
-- name: Install n
-  npm:
-    name: n
-    global: yes
-- name: npm cache clean
-  command: npm cache clean -f
-- name: n 10.12.0
-  command: n 10.12.0
-
-# Install tracker from source
 - name: tracker source directory
   file:
     dest: "{{ secnode_tracker_dir }}"
     state: directory
     owner: "{{ zennode_user_name }}"
-- name: Secure Node Tracker Install
+- name: NodeTracker Config
   block:
-    - name: Git tracker source
-      become: yes
-      become_user: "{{ zennode_user_name }}"
-      git:
-        repo: https://github.com/ZencashOfficial/nodetracker.git
-        dest: "{{ secnode_tracker_dir }}"
-        version: "v0.4.0"
-        force: yes
-    - name: npm install
-      npm:
-        path: "{{ secnode_tracker_dir }}"
-        state: latest
-
     - name: Nodetracker config parent directory
       file:
         path: "{{ secnode_tracker_dir }}/config"

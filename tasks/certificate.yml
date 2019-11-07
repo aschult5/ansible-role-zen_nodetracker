@@ -3,6 +3,7 @@
     that:
       - secnode_update_svc_name is defined
       - zennode_zend_svc_name is defined
+      - secnode_tls_cert is defined
     msg: Required variable missing.
 
 # Dependencies
@@ -24,7 +25,7 @@
 - name: Generate Certificate
   command: "certbot certonly -n --agree-tos --register-unsafely-without-email --standalone -d {{ inventory_hostname }}"
   args:
-    creates: "/etc/letsencrypt/live/{{ inventory_hostname }}/chain.pem"
+    creates: "{{ secnode_tls_cert }}"
 
 - name: Set letsencrypt directory attributes
   file:
@@ -42,23 +43,9 @@
 - name: Copy certificate
   copy:
     remote_src: yes
-    src: "/etc/letsencrypt/live/{{ inventory_hostname }}/chain.pem"
+    src: "{{ secnode_tls_cert }}"
     dest: /usr/local/share/ca-certificates/chain.crt
   register: cert_copy
-
-# Register certificate in zen configuration
-- name: tlscertpath token in zen_conf
-  lineinfile:
-    regexp: '^tlscertpath='
-    line: "tlscertpath=/etc/letsencrypt/live/{{ inventory_hostname }}/cert.pem"
-    state: present
-    path: "{{ zennode_zen_conf }}"
-- name: tlskeypath token in zen_conf
-  lineinfile:
-    regexp: '^tlskeypath='
-    line: "tlskeypath=/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem"
-    state: present
-    path: "{{ zennode_zen_conf }}"
 
 # Update certificates on CA change
 - block:
