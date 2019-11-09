@@ -1,12 +1,2 @@
-galaxy_info:
-  author: Andrew Schultz
-  description: zencash secure nodes
-  min_ansible_version: 2.6
-  galaxy_tags: []
 dependencies:
   - zennode
-  - role: nickjj.docker
-    vars:
-      docker__edition: ce
-      docker__channel: ["stable"]
-      docker__version: 18.06
