@@ -4,5 +4,4 @@
   when: secnode_skip_wallet == false
 - import_tasks: certificate.yml
 - import_tasks: tracker-config.yaml
-- import_tasks: tracker-container.yaml
-- import_tasks: tracker-svc.yaml
+- import_tasks: tracker-install.yaml
