@@ -1,2 +1,4 @@
 dependencies:
-  - zennode
+  - role: zennode
+    vars:
+      certified: true
