@@ -21,6 +21,7 @@
     image: "aschultz5/zen-nodetracker:{{ secnode_tracker_ver|d('latest') }}"
     state: present
     restart_policy: unless-stopped
+    user: "{{ zennode_user_id|d(omit,true) }}"
     log_driver: journald
     env:
       ZENCONF: /mnt/zen/zen.conf

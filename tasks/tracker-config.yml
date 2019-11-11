@@ -24,7 +24,7 @@
         path: "{{ secnode_tracker_dir }}/config"
         state: directory
         owner: "{{ zennode_user_name }}"
-        mode: 0755
+        mode: 0777
 
     - set_fact:
         tracker_config_path: "{{ secnode_tracker_dir }}/config/config.json"
