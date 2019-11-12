@@ -1,9 +1,9 @@
 {
- "active": "{{ secnode_type }}"
+ "active": "{{ snode_type }}"
  ,"super": {
   "nodetype": "super"
-{% if secnode_tracker_config.super.nodeid is defined %}
-  ,"nodeid": "{{ secnode_tracker_config.super.nodeid }}"
+{% if snode_tracker_config.super.nodeid is defined %}
+  ,"nodeid": "{{ snode_tracker_config.super.nodeid }}"
 {% else %}
   ,"nodeid": null
 {% endif %}
@@ -17,13 +17,13 @@
    ,"xns3.na"
    ,"xns4.na"
   ]
-  ,"stakeaddr": "{{ secnode_stake_taddr }}"
-  ,"email": "{{ secnode_alert_email }}"
+  ,"stakeaddr": "{{ snode_stake_taddr }}"
+  ,"email": "{{ snode_alert_email }}"
   ,"fqdn": "{{ inventory_hostname }}"
   ,"ipv": "4"
   ,"region": "eu"
   ,"home": "xns1.eu"
-  ,"category": "{{ secnode_category|d('none') }}"
+  ,"category": "{{ snode_category|d('none') }}"
  }
  ,"secure": {
   "nodetype": "secure"
@@ -39,18 +39,17 @@
    ,"ts3.na"
    ,"ts4.na"
   ]
-  ,"stakeaddr": "{{ secnode_stake_taddr }}"
-  ,"email": "{{ secnode_alert_email }}"
+  ,"stakeaddr": "{{ snode_stake_taddr }}"
+  ,"email": "{{ snode_alert_email }}"
   ,"fqdn": "{{ inventory_hostname }}"
   ,"ipv": "4"
   ,"region": "eu"
   ,"home": "ts2.eu"
-  ,"category": "{{ secnode_category|d('none') }}"
-{% if secnode_tracker_config.secure.nodeid is defined %}
-  ,"nodeid": "{{ secnode_tracker_config.secure.nodeid }}"
+  ,"category": "{{ snode_category|d('none') }}"
+{% if snode_tracker_config.secure.nodeid is defined %}
+  ,"nodeid": "{{ snode_tracker_config.secure.nodeid }}"
 {% else %}
   ,"nodeid": null
 {% endif %}
-
  }
 }

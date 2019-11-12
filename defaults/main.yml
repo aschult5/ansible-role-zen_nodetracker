@@ -1,5 +1,5 @@
 ---
-secnode_tracker_ver: v0.4.0
-secnode_type: secure
-secnode_tracker_dir: "{{ zend_user_home }}/nodetracker"
-secnode_tracker_svc_name: zentracker
+snode_tracker_ver: v0.4.0
+snode_type: secure
+snode_tracker_dir: "{{ zend_user_home }}/nodetracker"
+snode_tracker_svc_name: zentracker

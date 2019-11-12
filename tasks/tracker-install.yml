@@ -1,8 +1,8 @@
 ---
 - name: Install Tracker Container
   docker_container:
-    name: "{{ secnode_tracker_svc_name }}"
-    image: "aschultz5/zen-nodetracker:{{ secnode_tracker_ver|d('latest') }}"
+    name: "{{ snode_tracker_svc_name }}"
+    image: "aschultz5/zen-nodetracker:{{ snode_tracker_ver|d('latest') }}"
     state: present
     restart_policy: unless-stopped
     user: "{{ zend_user_id|d(omit,true) }}"
@@ -10,14 +10,14 @@
     env:
       ZENCONF: /mnt/zen/zen.conf
     volumes:
-      - "{{ secnode_tracker_dir }}/config:/home/node/app/config"
+      - "{{ snode_tracker_dir }}/config:/home/node/app/config"
       - "{{ zend_dir }}:/mnt/zen:ro"
     networks:
       - name: "{{ zend_docker_net_name }}"
 
 - name: Tracker Service File
   copy:
-    dest: "/lib/systemd/system/{{ secnode_tracker_svc_name }}.service"
+    dest: "/lib/systemd/system/{{ snode_tracker_svc_name }}.service"
     owner: root
     content: |
       [Unit]
@@ -28,8 +28,8 @@
       [Service]
       Type=oneshot
       RemainAfterExit=yes
-      ExecStart=/usr/bin/docker start {{ secnode_tracker_svc_name }}
-      ExecStop=/usr/bin/docker stop {{ secnode_tracker_svc_name }}
+      ExecStart=/usr/bin/docker start {{ snode_tracker_svc_name }}
+      ExecStop=/usr/bin/docker stop {{ snode_tracker_svc_name }}
 
       [Install]
       WantedBy=multi-user.target
@@ -38,5 +38,5 @@
 
 - name: Enable Tracker Service
   service:
-    name: "{{ secnode_tracker_svc_name }}.service"
+    name: "{{ snode_tracker_svc_name }}.service"
     enabled: yes

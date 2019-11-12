@@ -4,12 +4,12 @@
     that: "{{item}} is defined"
     msg: Required input variable '{{item}}' undefined.
   with_items:
-    - secnode_alert_email
-    - secnode_stake_taddr
+    - snode_alert_email
+    - snode_stake_taddr
 
 - name: tracker source directory
   file:
-    dest: "{{ secnode_tracker_dir }}"
+    dest: "{{ snode_tracker_dir }}"
     state: directory
     owner: "{{ zend_user_name }}"
 
@@ -17,13 +17,13 @@
   block:
     - name: Nodetracker config parent directory
       file:
-        path: "{{ secnode_tracker_dir }}/config"
+        path: "{{ snode_tracker_dir }}/config"
         state: directory
         owner: "{{ zend_user_name }}"
         mode: 0777
 
     - set_fact:
-        tracker_config_path: "{{ secnode_tracker_dir }}/config/config.json"
+        tracker_config_path: "{{ snode_tracker_dir }}/config/config.json"
 
     - name: Check if tracker config exists
       stat:
@@ -39,7 +39,7 @@
 
         - name: Convert tracker config content to dict
           set_fact:
-            secnode_tracker_config: "{{ existing_tracker_config['content'] | b64decode | from_json }}"
+            snode_tracker_config: "{{ existing_tracker_config['content'] | b64decode | from_json }}"
       when: stat_result.stat.exists
 
     - name: NodeTracker Config Template

@@ -1,5 +1,5 @@
 ---
 - name: restart zentracker
   service:
-    name: "{{ secnode_tracker_svc_name }}.service"
+    name: "{{ snode_tracker_svc_name }}.service"
     state: restarted
