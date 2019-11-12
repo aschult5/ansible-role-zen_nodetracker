@@ -1,14 +1,4 @@
 ---
-- name: Check required tracker variables
-  assert:
-    that:
-      - secnode_tracker_svc_name is defined
-      - secnode_tracker_dir is defined
-      - zennode_zen_dir is defined
-      - zennode_zend_svc_name is defined
-      - container_net_name is defined
-    msg: Required variable missing.
-
 - name: Stop Tracker Service
   service:
     name: "{{ secnode_tracker_svc_name }}.service"

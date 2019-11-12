@@ -1,22 +1,18 @@
 ---
-- name: Check required tracker variables
+- name: Check required input variables
   assert:
-    that:
-      - secnode_alert_email is defined
-      - secnode_region is defined
-      - secnode_stake_taddr is defined
-      - secnode_category is defined
-      - secnode_tracker_dir is defined
-      - secnode_tracker_svc_name is defined
-      - zennode_user_name is defined
-      - zennode_zend_svc_name is defined
-    msg: Required variable missing.
+    that: "{{item}} is defined"
+    msg: Required input variable '{{item}}' undefined.
+  with_items:
+    - secnode_alert_email
+    - secnode_stake_taddr
 
 - name: tracker source directory
   file:
     dest: "{{ secnode_tracker_dir }}"
     state: directory
     owner: "{{ zennode_user_name }}"
+
 - name: NodeTracker Config
   block:
     - name: Nodetracker config parent directory

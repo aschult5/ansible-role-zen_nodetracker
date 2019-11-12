@@ -23,7 +23,7 @@
   ,"ipv": "4"
   ,"region": "eu"
   ,"home": "xns1.eu"
-  ,"category": "{{ secnode_category }}"
+  ,"category": "{{ secnode_category|d('none') }}"
  }
  ,"secure": {
   "nodetype": "secure"
@@ -45,7 +45,7 @@
   ,"ipv": "4"
   ,"region": "eu"
   ,"home": "ts2.eu"
-  ,"category": "{{ secnode_category }}"
+  ,"category": "{{ secnode_category|d('none') }}"
 {% if secnode_tracker_config.secure.nodeid is defined %}
   ,"nodeid": "{{ secnode_tracker_config.secure.nodeid }}"
 {% else %}

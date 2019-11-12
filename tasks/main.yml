@@ -1,5 +1,4 @@
 ---
-# tasks file for secnode
 - import_tasks: wallet.yml
   tags:
     - wallet
