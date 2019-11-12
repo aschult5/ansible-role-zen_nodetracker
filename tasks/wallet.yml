@@ -16,3 +16,5 @@
     dest: "{{ zennode_zen_dir }}/wallet.dat"
     owner: "{{ zennode_user_name }}"
     mode: 0600
+  notify:
+    - restart zend

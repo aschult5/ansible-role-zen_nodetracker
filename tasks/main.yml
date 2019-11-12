@@ -2,5 +2,11 @@
 - import_tasks: wallet.yml
   tags:
     - wallet
+
 - import_tasks: tracker-config.yml
+  notify:
+    - restart zentracker
+
 - import_tasks: tracker-install.yml
+  notify:
+    - restart zentracker

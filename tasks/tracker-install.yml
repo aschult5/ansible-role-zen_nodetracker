@@ -1,10 +1,4 @@
 ---
-- name: Stop Tracker Service
-  service:
-    name: "{{ secnode_tracker_svc_name }}.service"
-    state: stopped
-  ignore_errors: yes
-
 - name: Install Tracker Container
   docker_container:
     name: "{{ secnode_tracker_svc_name }}"
@@ -39,15 +33,10 @@
 
       [Install]
       WantedBy=multi-user.target
-  register: secnode_tracker_svc_file
+  notify:
+    - systemd daemon-reload
 
-- name: Reload Tracker Service File
-  systemd:
-    daemon_reload: true
-  when: secnode_tracker_svc_file.changed
-
-- name: Start/Enable Tracker Service
+- name: Enable Tracker Service
   service:
     name: "{{ secnode_tracker_svc_name }}.service"
     enabled: yes
-    state: started
