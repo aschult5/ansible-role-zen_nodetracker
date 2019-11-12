@@ -2,9 +2,11 @@
  "active": "{{ secnode_type }}"
  ,"super": {
   "nodetype": "super"
-  {% if secnode_tracker_config is defined and 'super' in secnode_tracker_config and 'nodeid' in secnode_tracker_config.super %}
+{% if secnode_tracker_config.super.nodeid is defined %}
   ,"nodeid": "{{ secnode_tracker_config.super.nodeid }}"
-  {% endif %}
+{% else %}
+  ,"nodeid": null
+{% endif %}
   ,"servers": [
    "xns1.eu"
    ,"xns2.eu"
@@ -44,8 +46,11 @@
   ,"region": "eu"
   ,"home": "ts2.eu"
   ,"category": "{{ secnode_category }}"
-  {% if secnode_tracker_config is defined and 'secure' in secnode_tracker_config and 'nodeid' in secnode_tracker_config.secure %}
+{% if secnode_tracker_config.secure.nodeid is defined %}
   ,"nodeid": "{{ secnode_tracker_config.secure.nodeid }}"
-  {% endif %}
+{% else %}
+  ,"nodeid": null
+{% endif %}
+
  }
 }
