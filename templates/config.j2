@@ -21,8 +21,8 @@
   ,"email": "{{ snode_alert_email }}"
   ,"fqdn": "{{ inventory_hostname }}"
   ,"ipv": "4"
-  ,"region": "eu"
-  ,"home": "xns1.eu"
+  ,"region": "{{ snode_region|d('eu') }}"
+  ,"home": "xns1.{{ snode_region|d('eu') }}"
   ,"category": "{{ snode_category|d('none') }}"
  }
  ,"secure": {
@@ -43,8 +43,8 @@
   ,"email": "{{ snode_alert_email }}"
   ,"fqdn": "{{ inventory_hostname }}"
   ,"ipv": "4"
-  ,"region": "eu"
-  ,"home": "ts2.eu"
+  ,"region": "{{ snode_region|d('eu') }}"
+  ,"home": "ts2.{{ snode_region|d('eu') }}"
   ,"category": "{{ snode_category|d('none') }}"
 {% if snode_tracker_config.secure.nodeid is defined %}
   ,"nodeid": "{{ snode_tracker_config.secure.nodeid }}"
