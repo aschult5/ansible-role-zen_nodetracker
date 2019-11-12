@@ -5,15 +5,15 @@
     image: "aschultz5/zen-nodetracker:{{ secnode_tracker_ver|d('latest') }}"
     state: present
     restart_policy: unless-stopped
-    user: "{{ zennode_user_id|d(omit,true) }}"
+    user: "{{ zend_user_id|d(omit,true) }}"
     log_driver: journald
     env:
       ZENCONF: /mnt/zen/zen.conf
     volumes:
       - "{{ secnode_tracker_dir }}/config:/home/node/app/config"
-      - "{{ zennode_zen_dir }}:/mnt/zen:ro"
+      - "{{ zend_dir }}:/mnt/zen:ro"
     networks:
-      - name: "{{ container_net_name }}"
+      - name: "{{ zend_docker_net_name }}"
 
 - name: Tracker Service File
   copy:
@@ -22,8 +22,8 @@
     content: |
       [Unit]
       Description=ZenCash nodetracker
-      Requires={{ zennode_zend_svc_name }}.service
-      After={{ zennode_zend_svc_name }}.service
+      Requires={{ zend_svc_name }}.service
+      After={{ zend_svc_name }}.service
 
       [Service]
       Type=oneshot

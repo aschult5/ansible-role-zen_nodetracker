@@ -11,7 +11,7 @@
   file:
     dest: "{{ secnode_tracker_dir }}"
     state: directory
-    owner: "{{ zennode_user_name }}"
+    owner: "{{ zend_user_name }}"
 
 - name: NodeTracker Config
   block:
@@ -19,7 +19,7 @@
       file:
         path: "{{ secnode_tracker_dir }}/config"
         state: directory
-        owner: "{{ zennode_user_name }}"
+        owner: "{{ zend_user_name }}"
         mode: 0777
 
     - set_fact:
@@ -46,8 +46,8 @@
       template:
         src: config.j2
         dest: "{{ tracker_config_path }}"
-        owner: "{{ zennode_user_name }}"
+        owner: "{{ zend_user_name }}"
         mode: 0664
 
   become: yes
-  become_user: "{{ zennode_user_name }}"
+  become_user: "{{ zend_user_name }}"
