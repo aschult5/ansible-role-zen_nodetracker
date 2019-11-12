@@ -1,6 +1,7 @@
 ---
 # tasks file for secnode
 - import_tasks: wallet.yml
-  when: secnode_skip_wallet == false
+  tags:
+    - wallet
 - import_tasks: tracker-config.yml
 - import_tasks: tracker-install.yml

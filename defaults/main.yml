@@ -4,4 +4,3 @@ secnode_tracker_dir: "{{ zennode_user_home }}/nodetracker"
 secnode_tracker_svc_name: zentracker
 secnode_tracker_ver: v0.4.0
 secnode_alert_email: thenodeler@gmail.com
-secnode_skip_wallet: false
