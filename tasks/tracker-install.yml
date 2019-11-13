@@ -28,6 +28,7 @@
       [Service]
       Type=oneshot
       RemainAfterExit=yes
+      TimeoutStartSec=100
       ExecStart=/usr/bin/docker start {{ snode_tracker_svc_name }}
       ExecStop=/usr/bin/docker stop {{ snode_tracker_svc_name }}
 
