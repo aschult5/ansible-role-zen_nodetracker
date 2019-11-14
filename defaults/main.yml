@@ -1,5 +1,6 @@
 ---
-snode_tracker_ver: v0.4.0
-snode_type: secure
-snode_tracker_dir: "{{ zend_user_home }}/nodetracker"
-snode_tracker_svc_name: zentracker
+nodetracker_ver: v0.4.0
+nodetracker_type: secure
+nodetracker_dir: "{{ zend_user_home }}/nodetracker"
+nodetracker_svc_name: zentracker
+nodetracker_docker_ctr_name: zentracker

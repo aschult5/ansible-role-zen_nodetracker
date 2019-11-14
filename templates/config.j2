@@ -1,9 +1,9 @@
 {
- "active": "{{ snode_type }}"
+ "active": "{{ nodetracker_type }}"
  ,"super": {
   "nodetype": "super"
-{% if snode_tracker_config.super.nodeid is defined %}
-  ,"nodeid": "{{ snode_tracker_config.super.nodeid }}"
+{% if nodetracker_config.super.nodeid is defined %}
+  ,"nodeid": "{{ nodetracker_config.super.nodeid }}"
 {% else %}
   ,"nodeid": null
 {% endif %}
@@ -17,13 +17,13 @@
    ,"xns3.na"
    ,"xns4.na"
   ]
-  ,"stakeaddr": "{{ snode_stake_taddr }}"
-  ,"email": "{{ snode_alert_email }}"
+  ,"stakeaddr": "{{ nodetracker_stake_taddr }}"
+  ,"email": "{{ nodetracker_alert_email }}"
   ,"fqdn": "{{ inventory_hostname }}"
   ,"ipv": "4"
-  ,"region": "{{ snode_region|d('eu') }}"
-  ,"home": "xns1.{{ snode_region|d('eu') }}"
-  ,"category": "{{ snode_category|d('none') }}"
+  ,"region": "{{ nodetracker_region|d('eu') }}"
+  ,"home": "xns1.{{ nodetracker_region|d('eu') }}"
+  ,"category": "{{ nodetracker_category|d('none') }}"
  }
  ,"secure": {
   "nodetype": "secure"
@@ -39,15 +39,15 @@
    ,"ts3.na"
    ,"ts4.na"
   ]
-  ,"stakeaddr": "{{ snode_stake_taddr }}"
-  ,"email": "{{ snode_alert_email }}"
+  ,"stakeaddr": "{{ nodetracker_stake_taddr }}"
+  ,"email": "{{ nodetracker_alert_email }}"
   ,"fqdn": "{{ inventory_hostname }}"
   ,"ipv": "4"
-  ,"region": "{{ snode_region|d('eu') }}"
-  ,"home": "ts2.{{ snode_region|d('eu') }}"
-  ,"category": "{{ snode_category|d('none') }}"
-{% if snode_tracker_config.secure.nodeid is defined %}
-  ,"nodeid": "{{ snode_tracker_config.secure.nodeid }}"
+  ,"region": "{{ nodetracker_region|d('eu') }}"
+  ,"home": "ts2.{{ nodetracker_region|d('eu') }}"
+  ,"category": "{{ nodetracker_category|d('none') }}"
+{% if nodetracker_config.secure.nodeid is defined %}
+  ,"nodeid": "{{ nodetracker_config.secure.nodeid }}"
 {% else %}
   ,"nodeid": null
 {% endif %}

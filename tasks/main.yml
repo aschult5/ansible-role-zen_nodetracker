@@ -1,8 +1,8 @@
 ---
 - import_tasks: tracker-config.yml
   notify:
-    - restart zentracker
+    - restart nodetracker
 
 - import_tasks: tracker-install.yml
   notify:
-    - restart zentracker
+    - restart nodetracker

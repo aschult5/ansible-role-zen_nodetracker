@@ -4,12 +4,12 @@
     that: "{{item}} is defined"
     msg: Required input variable '{{item}}' undefined.
   with_items:
-    - snode_alert_email
-    - snode_stake_taddr
+    - nodetracker_alert_email
+    - nodetracker_stake_taddr
 
 - name: tracker source directory
   file:
-    dest: "{{ snode_tracker_dir }}"
+    dest: "{{ nodetracker_dir }}"
     state: directory
     owner: "{{ zend_user_name }}"
 
@@ -19,17 +19,17 @@
   block:
     - name: Nodetracker config parent directory
       file:
-        path: "{{ snode_tracker_dir }}/config"
+        path: "{{ nodetracker_dir }}/config"
         state: directory
         owner: "{{ zend_user_name }}"
         mode: 0777
 
     - set_fact:
-        tracker_config_path: "{{ snode_tracker_dir }}/config/config.json"
+        nodetracker_config_path: "{{ nodetracker_dir }}/config/config.json"
 
     - name: Check if tracker config exists
       stat:
-        path: "{{ tracker_config_path }}"
+        path: "{{ nodetracker_config_path }}"
       register: stat_result
 
     - name: Extract Existing NodeTracker Config
@@ -37,16 +37,16 @@
       block:
         - name: Read existing tracker config
           slurp:
-            src: "{{ tracker_config_path }}"
-          register: existing_tracker_config
+            src: "{{ nodetracker_config_path }}"
+          register: nodetracker_config_raw
 
         - name: Convert tracker config content to dict
           set_fact:
-            snode_tracker_config: "{{ existing_tracker_config['content'] | b64decode | from_json }}"
+            nodetracker_config: "{{ nodetracker_config_raw['content'] | b64decode | from_json }}"
 
     - name: NodeTracker Config Template
       template:
         src: config.j2
-        dest: "{{ tracker_config_path }}"
+        dest: "{{ nodetracker_config_path }}"
         owner: "{{ zend_user_name }}"
         mode: 0664
