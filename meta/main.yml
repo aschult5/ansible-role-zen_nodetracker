@@ -1,2 +1,21 @@
+---
 dependencies:
   - role: aschult5.zend
+
+galaxy_info:
+  author: aschult5
+  description: Horizen's nodetracker
+  license: MIT
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - xenial
+    - name: Debian
+      versions:
+        - stretch
+
+  galaxy_tags: []
