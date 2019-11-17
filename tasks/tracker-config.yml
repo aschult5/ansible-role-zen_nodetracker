@@ -24,7 +24,8 @@
         owner: "{{ zend_user_name }}"
         mode: 0777
 
-    - set_fact:
+    - name: Set nodetracker_config_path
+      set_fact:
         nodetracker_config_path: "{{ nodetracker_dir }}/config/config.json"
 
     - name: Check if tracker config exists
