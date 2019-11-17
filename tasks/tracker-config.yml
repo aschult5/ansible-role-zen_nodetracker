@@ -13,42 +13,38 @@
     state: directory
     owner: "{{ zend_user_name }}"
 
-- name: NodeTracker Config
-  become: yes
-  become_user: "{{ zend_user_name }}"
+- name: Nodetracker config parent directory
+  file:
+    path: "{{ nodetracker_dir }}/config"
+    state: directory
+    owner: "{{ zend_user_name }}"
+    mode: 0777
+
+- name: Set nodetracker_config_path
+  set_fact:
+    nodetracker_config_path: "{{ nodetracker_dir }}/config/config.json"
+
+- name: Check if tracker config exists
+  stat:
+    path: "{{ nodetracker_config_path }}"
+  register: stat_result
+
+- name: Extract Existing NodeTracker Config
+  when: stat_result.stat.exists
   block:
-    - name: Nodetracker config parent directory
-      file:
-        path: "{{ nodetracker_dir }}/config"
-        state: directory
-        owner: "{{ zend_user_name }}"
-        mode: 0777
+    - name: Read existing tracker config
+      slurp:
+        src: "{{ nodetracker_config_path }}"
+      register: nodetracker_config_raw
 
-    - name: Set nodetracker_config_path
+    - name: Convert tracker config content to dict
       set_fact:
-        nodetracker_config_path: "{{ nodetracker_dir }}/config/config.json"
+        nodetracker_config: "{{ nodetracker_config_raw['content'] | b64decode | from_json }}"
 
-    - name: Check if tracker config exists
-      stat:
-        path: "{{ nodetracker_config_path }}"
-      register: stat_result
-
-    - name: Extract Existing NodeTracker Config
-      when: stat_result.stat.exists
-      block:
-        - name: Read existing tracker config
-          slurp:
-            src: "{{ nodetracker_config_path }}"
-          register: nodetracker_config_raw
-
-        - name: Convert tracker config content to dict
-          set_fact:
-            nodetracker_config: "{{ nodetracker_config_raw['content'] | b64decode | from_json }}"
-
-    - name: NodeTracker Config Template
-      template:
-        src: config.j2
-        dest: "{{ nodetracker_config_path }}"
-        owner: "{{ zend_user_name }}"
-        mode: 0664
-      notify: restart nodetracker
+- name: NodeTracker Config Template
+  template:
+    src: config.j2
+    dest: "{{ nodetracker_config_path }}"
+    owner: "{{ zend_user_name }}"
+    mode: 0664
+  notify: restart nodetracker
