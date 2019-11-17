@@ -7,22 +7,16 @@
     - nodetracker_alert_email
     - nodetracker_stake_taddr
 
-- name: tracker source directory
-  file:
-    dest: "{{ nodetracker_dir }}"
-    state: directory
-    owner: "{{ zend_user_name }}"
-
-- name: Nodetracker config parent directory
-  file:
-    path: "{{ nodetracker_dir }}/config"
-    state: directory
-    owner: "{{ zend_user_name }}"
-    mode: 0777
-
 - name: Set nodetracker_config_path
   set_fact:
     nodetracker_config_path: "{{ nodetracker_dir }}/config/config.json"
+
+- name: Nodetracker config parent directory
+  file:
+    path: "{{ nodetracker_config_path | dirname }}"
+    state: directory
+    owner: "{{ zend_user_name }}"
+    mode: 0777
 
 - name: Check if tracker config exists
   stat:
