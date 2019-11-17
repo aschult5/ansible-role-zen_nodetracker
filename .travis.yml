@@ -1,0 +1,29 @@
+---
+language: python
+services: docker
+
+env:
+  global:
+    - ROLE_NAME: zen_nodetracker
+  matrix:
+    - TARGET_DISTRO: ubuntu1804
+    - TARGET_DISTRO: ubuntu1604
+    - TARGET_DISTRO: debian9
+
+install:
+  # Install test dependencies.
+  - pip install 'molecule[docker]'
+
+before_script:
+  # Use actual Ansible Galaxy role name for the project directory.
+  - export ROLE_SRC_DIR=$PWD
+  - cd ../
+  - mv $ROLE_SRC_DIR aschult5.$ROLE_NAME
+  - cd aschult5.$ROLE_NAME
+
+script:
+  # Run tests.
+  - molecule test
+
+# notifications:
+#   webhooks: https://galaxy.ansible.com/api/v1/notifications/
