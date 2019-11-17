@@ -51,3 +51,4 @@
         dest: "{{ nodetracker_config_path }}"
         owner: "{{ zend_user_name }}"
         mode: 0664
+      notify: restart nodetracker

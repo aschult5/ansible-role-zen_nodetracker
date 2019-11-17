@@ -14,4 +14,6 @@
       - "{{ zend_dir }}:/mnt/zen:ro"
     networks:
       - name: "{{ zend_docker_net_name }}"
+  notify:
+    - restart nodetracker
 
