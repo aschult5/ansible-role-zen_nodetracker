@@ -1,6 +1,8 @@
 ---
 dependencies:
   - role: aschult5.zend
+    vars:
+      zend_docker_net_connected: ["{{ nodetracker_docker_ctr_name }}"]
 
 galaxy_info:
   author: aschult5
