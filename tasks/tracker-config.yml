@@ -1,8 +1,8 @@
 ---
 - name: Check required input variables
   assert:
-    that: "{{item}} is defined"
-    msg: Required input variable '{{item}}' undefined.
+    that: "{{ item }} is defined"
+    msg: Required input variable '{{ item }}' undefined.
   with_items:
     - nodetracker_alert_email
     - nodetracker_stake_taddr
