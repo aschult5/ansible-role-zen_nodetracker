@@ -2,10 +2,10 @@
 - name: Install Tracker Container
   docker_container:
     name: "{{ nodetracker_docker_ctr_name }}"
-    image: "aschultz5/zen-nodetracker:{{ nodetracker_ver|d('latest') }}"
+    image: "aschultz5/zen-nodetracker:{{ nodetracker_ver }}"
     state: present
     restart_policy: unless-stopped
-    user: "{{ zend_user_id|d(omit,true) }}"
+    user: "{{ zend_user_id }}"
     log_driver: journald
     env:
       ZENCONF: /mnt/zen/zen.conf
