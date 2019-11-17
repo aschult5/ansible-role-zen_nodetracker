@@ -1,6 +1,98 @@
 ---
-- import_tasks: tracker-config.yml
+- name: Check required input variables
+  assert:
+    that: "{{ item }} is defined"
+    msg: Required input variable '{{ item }}' undefined.
+  with_items:
+    - nodetracker_alert_email
+    - nodetracker_stake_taddr
 
-- import_tasks: tracker-container.yml
+#
+# Nodetracker Config
+#
+- name: Set nodetracker_config_path
+  set_fact:
+    nodetracker_config_path: "{{ nodetracker_dir }}/config/config.json"
 
-- import_tasks: tracker-service.yml
+- name: Nodetracker config parent directory
+  file:
+    path: "{{ nodetracker_config_path | dirname }}"
+    state: directory
+    owner: "{{ zend_user_name }}"
+    mode: 0777
+
+- name: Check if tracker config exists
+  stat:
+    path: "{{ nodetracker_config_path }}"
+  register: stat_result
+
+- name: Extract Existing NodeTracker Config
+  when: stat_result.stat.exists
+  block:
+    - name: Read existing tracker config
+      slurp:
+        src: "{{ nodetracker_config_path }}"
+      register: nodetracker_config_raw
+
+    - name: Convert tracker config content to dict
+      set_fact:
+        nodetracker_config: "{{ nodetracker_config_raw['content'] | b64decode | from_json }}"
+
+- name: NodeTracker Config Template
+  template:
+    src: config.j2
+    dest: "{{ nodetracker_config_path }}"
+    owner: "{{ zend_user_name }}"
+    mode: 0664
+  notify: restart nodetracker
+
+#
+# Nodetracker Container Installation
+#
+- name: Install Tracker Container
+  docker_container:
+    name: "{{ nodetracker_docker_ctr_name }}"
+    image: "aschultz5/zen-nodetracker:{{ nodetracker_ver }}"
+    state: present
+    restart_policy: unless-stopped
+    user: "{{ zend_user_id }}"
+    log_driver: journald
+    env:
+      ZENCONF: /mnt/zen/zen.conf
+    volumes:
+      - "{{ nodetracker_dir }}/config:/home/node/app/config"
+      - "{{ zend_dir }}:/mnt/zen:ro"
+    networks:
+      - name: "{{ zend_docker_net_name }}"
+  notify:
+    - restart nodetracker
+
+#
+# Nodetracker Service
+#
+- name: Tracker Service File
+  copy:
+    dest: "/lib/systemd/system/{{ nodetracker_svc_name }}.service"
+    owner: root
+    content: |
+      [Unit]
+      Description=ZenCash nodetracker
+      Requires={{ zend_svc_name }}.service
+      After={{ zend_svc_name }}.service
+
+      [Service]
+      Type=oneshot
+      RemainAfterExit=yes
+      TimeoutStartSec=100
+      ExecStart=/usr/bin/docker start {{ nodetracker_docker_ctr_name }}
+      ExecStop=/usr/bin/docker stop {{ nodetracker_docker_ctr_name }}
+
+      [Install]
+      WantedBy=multi-user.target
+  notify:
+    - systemd daemon-reload
+
+- name: Enable Tracker Service
+  service:
+    name: "{{ nodetracker_svc_name }}.service"
+    enabled: yes
