@@ -3,6 +3,10 @@
   notify:
     - restart nodetracker
 
-- import_tasks: tracker-install.yml
+- import_tasks: tracker-container.yml
+  notify:
+    - restart nodetracker
+
+- import_tasks: tracker-service.yml
   notify:
     - restart nodetracker
