@@ -1,7 +1,24 @@
 ---
 - name: Converge
   hosts: all
-  tasks:
-    - name: Pass
-      debug:
-        var: inventory_hostname
+  vars:
+    docker_install_compose: false
+    docker_service_state: stopped
+    docker_service_enabled: false
+    docker_restart_handler_state: stopped
+    firewall_enable_ipv6: false
+
+  pre_tasks:
+    - name: Update apt cache
+      apt: update_cache=true cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+
+    - name: Install systemd-sysv
+      apt: name=systemd-sysv
+      when: ansible_os_family == 'Debian'
+
+  roles:
+    - role: aschult5.zen_nodetracker
+      vars:
+        nodetracker_alert_email: devnull@email.com
+        nodetracker_stake_taddr: znADummyZenTAddress35CharsLongggggg

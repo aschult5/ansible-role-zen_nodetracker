@@ -8,17 +8,43 @@ lint:
 platforms:
   - name: molecule_zen_nodetracker
     image: geerlingguy/docker-${TARGET_DISTRO:-ubuntu1804}-ansible:latest
-    command: ${DOCKER_COMMAND:-/lib/systemd/systemd}
+    override_command: false
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/mnt/docker.sock
+    tmpfs:
+      - /tmp
+      - /run
     privileged: true
     pre_build_image: true
 provisioner:
   name: ansible
+  inventory:
+    hosts:
+      all:
+        vars:
+          # Note: vars defined here should probably be copied under verifier.
+          zend_docker_host: unix:///mnt/docker.sock
+          zend_svc_name: TrackerZend
+          zend_docker_ctr_name: TrackerZendCtr
+          zend_docker_net_name: TrackerNet
+          zend_docker_net_subnet: 172.43.0.0/24
+          zend_docker_net_gateway: 172.43.0.254
+          zend_docker_ipv4: 172.43.0.1
+          nodetracker_docker_ctr_name: TrackerCtr
+          nodetracker_svc_name: TrackerSvc
   lint:
     name: ansible-lint
 verifier:
   name: testinfra
   lint:
     name: flake8
+  env:
+    ZEND_SVC_NAME: TrackerZend
+    ZEND_DOCKER_CTR_NAME: TrackerZendCtr
+    ZEND_DOCKER_NET_NAME: TrackerNet
+    ZEND_DOCKER_NET_SUBNET: 172.43.0.0/24
+    ZEND_DOCKER_NET_GATEWAY: 172.43.0.254
+    ZEND_DOCKER_IPV4: 172.43.0.1
+    NODETRACKER_DOCKER_CTR_NAME: TrackerCtr
+    NODETRACKER_SVC_NAME: TrackerSvc

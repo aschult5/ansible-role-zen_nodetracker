@@ -7,9 +7,14 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts('all')
 
 
-def test_hosts_file(host):
-    f = host.file('/etc/hosts')
+def test_tracker_is_installed(host):
+    ctr_name = os.environ['NODETRACKER_DOCKER_CTR_NAME']
+    nodetracker = host.docker(ctr_name)
+    assert nodetracker
 
-    assert f.exists
-    assert f.user == 'root'
-    assert f.group == 'root'
+
+def test_tracker_running(host):
+    svc_name = os.environ['NODETRACKER_SVC_NAME']
+    nodetracker = host.service(svc_name)
+    assert nodetracker.is_enabled
+    assert nodetracker.is_running

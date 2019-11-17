@@ -1,0 +1,36 @@
+---
+- name: Cleanup
+  hosts: all
+  ignore_unreachable: true
+  ignore_errors: true
+  gather_facts: false
+
+  tasks:
+    # test whether the host is reachable before continuing
+    - ping:
+      register: reach
+    - meta: end_host
+      when: reach.ping|d() != "pong"
+
+    # Note: all required vars must be defined in inventory, e.g. in molecule.yml
+    - name: pip install docker
+      pip: name=docker
+
+    - name: Delete zend docker_container
+      docker_container:
+        name: "{{ zend_docker_ctr_name }}"
+        docker_host: "{{ zend_docker_host }}"
+        state: absent
+
+    - name: Delete tracker docker_container
+      docker_container:
+        name: "{{ nodetracker_docker_ctr_name }}"
+        docker_host: "{{ zend_docker_host }}"
+        state: absent
+
+    - name: Delete docker_network
+      docker_network:
+        name: "{{ zend_docker_net_name }}"
+        docker_host: "{{ zend_docker_host }}"
+        state: absent
+        force: yes

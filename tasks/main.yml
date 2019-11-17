@@ -52,6 +52,7 @@
 - name: Install Tracker Container
   docker_container:
     name: "{{ nodetracker_docker_ctr_name }}"
+    docker_host: "{{ zend_docker_host }}"
     image: "aschultz5/zen-nodetracker:{{ nodetracker_ver }}"
     state: present
     restart_policy: unless-stopped
