@@ -2,10 +2,10 @@
  "active": "{{ nodetracker_type }}"
  ,"super": {
   "nodetype": "super"
-{% if nodetracker_config.super.nodeid is defined %}
-  ,"nodeid": "{{ nodetracker_config.super.nodeid }}"
-{% else %}
+{% if not nodetracker_config.super.nodeid|d('', true) %}
   ,"nodeid": null
+{% else %}
+  ,"nodeid": "{{ nodetracker_config.super.nodeid }}"
 {% endif %}
   ,"servers": [
    "xns1.eu"
@@ -46,10 +46,10 @@
   ,"region": "{{ nodetracker_region|d('eu') }}"
   ,"home": "ts2.{{ nodetracker_region|d('eu') }}"
   ,"category": "{{ nodetracker_category|d('none') }}"
-{% if nodetracker_config.secure.nodeid is defined %}
-  ,"nodeid": "{{ nodetracker_config.secure.nodeid }}"
-{% else %}
+{% if not nodetracker_config.secure.nodeid|d('', true) %}
   ,"nodeid": null
+{% else %}
+  ,"nodeid": "{{ nodetracker_config.secure.nodeid }}"
 {% endif %}
  }
 }
