@@ -3,4 +3,5 @@ nodetracker_ver: latest
 nodetracker_type: secure
 nodetracker_dir: /mnt/nodetracker
 nodetracker_svc_name: zentracker
+nodetracker_svc_enabled: yes
 nodetracker_docker_ctr_name: zentracker
