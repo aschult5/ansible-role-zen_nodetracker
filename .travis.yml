@@ -11,7 +11,6 @@ env:
     - TARGET_DISTRO: debian9
 
 install:
-  # Install test dependencies.
   - pip install 'molecule[docker]'
 
 before_script:
@@ -22,8 +21,7 @@ before_script:
   - cd aschult5.$ROLE_NAME
 
 script:
-  # Run tests.
   - molecule test
 
-# notifications:
-#   webhooks: https://galaxy.ansible.com/api/v1/notifications/
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
