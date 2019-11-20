@@ -1,18 +1,6 @@
 ---
-- name: stop nodetracker
+- name: restart nodetracker
   service:
     name: "{{ nodetracker_svc_name }}.service"
-    state: stopped
+    state: restarted
     enabled: "{{ nodetracker_svc_enabled }}"
-  listen: restart nodetracker
-
-- name: tracker systemd daemon-reload
-  systemd:
-    daemon-reload: true
-
-- name: start nodetracker
-  service:
-    name: "{{ nodetracker_svc_name }}.service"
-    state: started
-    enabled: "{{ nodetracker_svc_enabled }}"
-  listen: restart nodetracker

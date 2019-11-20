@@ -90,4 +90,7 @@
 
       [Install]
       WantedBy=multi-user.target
-  notify: tracker systemd daemon-reload
+
+- name: systemd daemon-reload
+  systemd:
+    daemon-reload: true
