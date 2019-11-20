@@ -4,3 +4,4 @@
     name: "{{ nodetracker_svc_name }}.service"
     state: restarted
     enabled: "{{ nodetracker_svc_enabled }}"
+  tags: service

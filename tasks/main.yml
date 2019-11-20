@@ -13,6 +13,7 @@
 - name: Set nodetracker_config_path
   set_fact:
     nodetracker_config_path: "{{ nodetracker_dir }}/config/config.json"
+  tags: config
 
 - name: Nodetracker config parent directory
   file:
@@ -20,11 +21,13 @@
     state: directory
     owner: "{{ zend_user_name }}"
     mode: 0777
+  tags: config
 
 - name: Check if tracker config exists
   stat:
     path: "{{ nodetracker_config_path }}"
   register: stat_result
+  tags: config
 
 - name: Extract Existing NodeTracker Config
   when: stat_result.stat.exists
@@ -37,6 +40,7 @@
     - name: Convert tracker config content to dict
       set_fact:
         nodetracker_config: "{{ nodetracker_config_raw['content'] | b64decode | from_json }}"
+  tags: config
 
 - name: NodeTracker Config Template
   template:
@@ -45,6 +49,7 @@
     owner: "{{ zend_user_name }}"
     mode: 0664
   notify: restart nodetracker
+  tags: config
 
 #
 # Nodetracker Container Installation
@@ -66,6 +71,7 @@
     networks:
       - name: "{{ zend_docker_net_name }}"
   notify: restart nodetracker
+  tags: container
 
 #
 # Nodetracker Service
@@ -90,7 +96,9 @@
 
       [Install]
       WantedBy=multi-user.target
+  tags: service
 
 - name: systemd daemon-reload
   systemd:
     daemon-reload: true
+  tags: service
