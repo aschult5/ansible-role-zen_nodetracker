@@ -7,14 +7,25 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 ).get_hosts('all')
 
 
-def test_tracker_is_installed(host):
+def test_docker(host):
+    docker_sock_default = '/var/run/docker.sock'
+    docker_sock = os.environ['ZEND_DOCKER_HOST'].replace('unix://', '', 1)
+    assert host.file(docker_sock)
+    if docker_sock != docker_sock_default:
+        cmd = host.run('ln -s {} {}'.format(docker_sock, docker_sock_default))
+        assert cmd.rc == 0
+
+
+def test_container(host):
+    # Check container
     ctr_name = os.environ['NODETRACKER_DOCKER_CTR_NAME']
-    nodetracker = host.docker(ctr_name)
-    assert nodetracker
+    ctr = host.docker(ctr_name)
+    assert ctr
+    assert ctr.is_running
 
 
-def test_tracker_running(host):
+def test_service(host):
     svc_name = os.environ['NODETRACKER_SVC_NAME']
-    nodetracker = host.service(svc_name)
-    assert nodetracker.is_enabled
-    assert nodetracker.is_running
+    svc = host.service(svc_name)
+    assert svc.is_enabled
+    assert svc.is_running
