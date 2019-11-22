@@ -27,10 +27,8 @@ provisioner:
           zend_docker_host: unix:///mnt/docker.sock
           zend_svc_name: TrackerZend
           zend_docker_ctr_name: TrackerZendCtr
+          zend_docker_ctr_stop_timeout: 300
           zend_docker_net_name: TrackerNet
-          zend_docker_net_subnet: 172.43.0.0/24
-          zend_docker_net_gateway: 172.43.0.254
-          zend_docker_ipv4: 172.43.0.1
           nodetracker_docker_ctr_name: TrackerCtr
           nodetracker_svc_name: TrackerSvc
   lint:
@@ -44,8 +42,5 @@ verifier:
     ZEND_SVC_NAME: TrackerZend
     ZEND_DOCKER_CTR_NAME: TrackerZendCtr
     ZEND_DOCKER_NET_NAME: TrackerNet
-    ZEND_DOCKER_NET_SUBNET: 172.43.0.0/24
-    ZEND_DOCKER_NET_GATEWAY: 172.43.0.254
-    ZEND_DOCKER_IPV4: 172.43.0.1
     NODETRACKER_DOCKER_CTR_NAME: TrackerCtr
     NODETRACKER_SVC_NAME: TrackerSvc
