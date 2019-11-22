@@ -23,6 +23,11 @@ def test_container(host):
     assert ctr
     assert ctr.is_running
 
+    # Check network
+    ctr_net_name = os.environ['ZEND_DOCKER_NET_NAME']
+    ctr_net = ctr.inspect()['NetworkSettings']['Networks'].get(ctr_net_name)
+    assert ctr_net['IPAddress']
+
 
 def test_service(host):
     svc_name = os.environ['NODETRACKER_SVC_NAME']

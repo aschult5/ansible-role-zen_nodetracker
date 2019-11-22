@@ -70,6 +70,7 @@
       - "{{ zend_dir }}:/mnt/zen:ro"
     networks:
       - name: "{{ zend_docker_net_name }}"
+    purge_networks: yes
   notify: restart nodetracker
   tags: container
 
