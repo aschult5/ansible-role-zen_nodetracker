@@ -1,2 +1,4 @@
+- src: geerlingguy.docker
+  version: 2.5.3
 - src: aschult5.zend
-  version: 2.0.0
+  version: 3.0.0
