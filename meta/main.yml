@@ -1,6 +1,9 @@
 ---
 dependencies:
   - role: aschult5.zend
+    vars:
+      zend_ipv4: "{{ ansible_default_ipv4.address | d('') }}"
+      zend_ipv6: "{{ ansible_default_ipv6.address | d('') }}"
 
 galaxy_info:
   author: aschult5
