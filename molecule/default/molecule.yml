@@ -12,6 +12,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /var/run/docker.sock:/mnt/docker.sock
+      - ${NODETRACKER_DIR:-/mnt/nodetracker}:${NODETRACKER_DIR:-/mnt/nodetracker}
     tmpfs:
       - /tmp
       - /run
@@ -31,6 +32,7 @@ provisioner:
           zend_docker_net_name: TrackerNet
           nodetracker_docker_ctr_name: TrackerCtr
           nodetracker_svc_name: TrackerSvc
+          nodetracker_dir: ${NODETRACKER_DIR:-/mnt/nodetracker}
   lint:
     name: ansible-lint
 verifier:
@@ -44,3 +46,4 @@ verifier:
     ZEND_DOCKER_NET_NAME: TrackerNet
     NODETRACKER_DOCKER_CTR_NAME: TrackerCtr
     NODETRACKER_SVC_NAME: TrackerSvc
+    NODETRACKER_DIR: ${NODETRACKER_DIR:-/mnt/nodetracker}

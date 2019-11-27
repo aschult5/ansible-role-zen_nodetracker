@@ -5,6 +5,7 @@ services: docker
 env:
   global:
     - ROLE_NAME: zen_nodetracker
+    - NODETRACKER_DIR: /mnt/nodetracker
   matrix:
     - TARGET_DISTRO: ubuntu1804
     - TARGET_DISTRO: ubuntu1604

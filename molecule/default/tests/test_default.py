@@ -34,3 +34,8 @@ def test_service(host):
     svc = host.service(svc_name)
     assert svc.is_enabled
     assert svc.is_running
+
+
+def test_config(host):
+    config = host.file(os.environ['NODETRACKER_DIR'] + '/config/config.json')
+    assert config.exists
