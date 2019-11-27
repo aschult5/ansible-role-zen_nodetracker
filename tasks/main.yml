@@ -52,6 +52,15 @@
 #
 # Nodetracker Container Installation
 #
+- name: Install Tracker Config Volume
+  docker_volume:
+    name: "{{ nodetracker_docker_ctr_name }}-config"
+    docker_host: "{{ zend_docker_host }}"
+    driver_options:
+      type: "none"
+      device: "{{ nodetracker_config_path | dirname }}"
+      o: bind
+
 - name: Install Tracker Container
   docker_container:
     name: "{{ nodetracker_docker_ctr_name }}"
@@ -63,7 +72,7 @@
     env:
       ZENCONF: /mnt/zen/zen.conf
     volumes:
-      - "{{ nodetracker_dir }}/config:/home/node/app/config"
+      - "{{ nodetracker_docker_ctr_name }}-config:/home/node/app/config"
       - "{{ zend_dir }}:/mnt/zen:ro"
     networks:
       - name: "{{ zend_docker_net_name }}"
