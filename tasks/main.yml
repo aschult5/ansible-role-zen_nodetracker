@@ -19,7 +19,6 @@
   file:
     path: "{{ nodetracker_config_path | dirname }}"
     state: directory
-    owner: "{{ zend_user_name }}"
     mode: 0777
   tags: config
 
@@ -46,7 +45,6 @@
   template:
     src: config.j2
     dest: "{{ nodetracker_config_path }}"
-    owner: "{{ zend_user_name }}"
     mode: 0664
   notify: restart nodetracker
   tags: config
@@ -61,7 +59,6 @@
     image: "aschultz5/zen-nodetracker:{{ nodetracker_ver }}"
     state: present
     restart_policy: unless-stopped
-    user: "{{ zend_user_id }}"
     log_driver: journald
     env:
       ZENCONF: /mnt/zen/zen.conf
