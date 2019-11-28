@@ -1,6 +1,6 @@
 # Ansible Role: zen\_nodetracker (Horizen)
 
-[![Build Status](https://travis-ci.org/aschult5/ansible-role-zen_nodetracker.svg?branch=master)](https://travis-ci.org/aschult5/ansible-role-zen_nodetracker)
+[![Build Status](https://travis-ci.com/aschult5/ansible-role-zen_nodetracker.svg?branch=master)](https://travis-ci.com/aschult5/ansible-role-zen_nodetracker)
 
 Installs and runs Horizen's nodetracker in a container on Debian/Ubuntu servers.
 
