@@ -2,10 +2,10 @@
  "active": "{{ nodetracker_type }}"
  ,"super": {
   "nodetype": "super"
-{% if not nodetracker_config.super.nodeid|d('', true) %}
-  ,"nodeid": null
+{% if nodetracker_super_nodeid | d(false, true) %}
+  ,"nodeid": "{{ nodetracker_super_nodeid }}"
 {% else %}
-  ,"nodeid": "{{ nodetracker_config.super.nodeid }}"
+  ,"nodeid": null
 {% endif %}
   ,"servers": [
    "xns1.eu"
@@ -46,10 +46,10 @@
   ,"region": "{{ nodetracker_region|d('eu') }}"
   ,"home": "ts2.{{ nodetracker_region|d('eu') }}"
   ,"category": "{{ nodetracker_category|d('none') }}"
-{% if not nodetracker_config.secure.nodeid|d('', true) %}
-  ,"nodeid": null
+{% if nodetracker_secure_nodeid | d(false, true) %}
+  ,"nodeid": "{{ nodetracker_secure_nodeid }}"
 {% else %}
-  ,"nodeid": "{{ nodetracker_config.secure.nodeid }}"
+  ,"nodeid": null
 {% endif %}
  }
 }

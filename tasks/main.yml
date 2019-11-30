@@ -39,6 +39,15 @@
     - name: Convert tracker config content to dict
       set_fact:
         nodetracker_config: "{{ nodetracker_config_raw['content'] | b64decode | from_json }}"
+
+    - name: Log existing nodetracker_config
+      debug:
+        var: nodetracker_config
+
+    - name: Extract nodeid
+      set_fact:
+        nodetracker_secure_nodeid: "{{ nodetracker_config.secure.nodeid | d('', true) }}"
+        nodetracker_super_nodeid: "{{ nodetracker_config.super.nodeid | d('', true) }}"
   tags: config
 
 - name: NodeTracker Config Template

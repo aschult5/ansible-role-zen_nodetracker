@@ -33,6 +33,12 @@ Configuration of systemd service controlling nodetracker.
 
 The name of the docker container running nodetracker.
 
+    nodetracker_secure_nodeid: <undefined>
+    nodetracker_super_nodeid: <undefined>
+
+Vaiables that may be used to restore an existing node.
+Note there are restrictions on changing the nodeid, staking address, and IP address of a node.
+
 ## Dependencies
 
   - aschult5.zend
