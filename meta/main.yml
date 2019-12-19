@@ -6,6 +6,7 @@ dependencies:
       zend_ipv6: "{{ ansible_default_ipv6.address | d('') }}"
 
 galaxy_info:
+  role_name: zen_nodetracker
   author: aschult5
   description: Horizen's nodetracker
   license: MIT
