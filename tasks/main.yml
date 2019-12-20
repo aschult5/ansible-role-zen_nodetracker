@@ -7,6 +7,21 @@
     - nodetracker_alert_email
     - nodetracker_stake_taddr
 
+- name: Check secure node settings
+  when: nodetracker_type == 'secure'
+  assert:
+    that:
+      - zend_ipv4 | ipv4
+    msg: zend_ipv4 must be valid
+
+- name: Check super node settings
+  when: nodetracker_type == 'super'
+  assert:
+    that:
+      - zend_ipv4 | ipv4
+      - zend_ipv6 | ipv6
+    msg: zend_ipv4 and zend_ipv6 must be valid
+
 #
 # Nodetracker Config
 #

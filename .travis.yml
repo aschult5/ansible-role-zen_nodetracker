@@ -13,6 +13,7 @@ env:
 
 install:
   - pip install 'molecule[docker]'
+  - pip install 'netaddr'
 
 before_script:
   # Use actual Ansible Galaxy role name for the project directory.

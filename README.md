@@ -6,7 +6,7 @@ Installs and runs Horizen's nodetracker in a container on Debian/Ubuntu servers.
 
 ## Requirements
 
-None.
+    - netaddr python module
 
 ## Role Variables
 
