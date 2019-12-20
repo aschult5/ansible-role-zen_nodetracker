@@ -20,6 +20,12 @@ The version of nodetracker to install. Refer to [zen-nodetracker tags on Docker 
 
 Valid options are 'secure' and 'super'.
 
+    nodetracker_stake_taddr: <undefined>
+    nodetracker_alert_email: <undefined>
+
+The staking address maintaining the required minimum balance of ZEN (42 or 500)
+The e-mail address to receive nodetracker alerts.
+
     nodetracker_dir: /mnt/nodetracker
 
 Where to store nodetracker files.
